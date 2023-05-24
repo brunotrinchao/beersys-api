@@ -12,5 +12,10 @@ const UsuarioRouter = require('./routes/UsuarioRouter');
 const UsuarioController = require('./controllers/UsuarioController');
 UsuarioRouter(routes, UsuarioController, autenticacaoMiddleware);
 
+// Rotas de Estabelecimento
+const EstabelecimentoRouter = require('./routes/EstabelecimentoRouter');
+const EstabelecimentoController = require('./controllers/EstabelecimentoController');
+EstabelecimentoRouter(routes, EstabelecimentoController, autenticacaoMiddleware);
+
 
 module.exports = routes;

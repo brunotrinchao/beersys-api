@@ -16,6 +16,8 @@ module.exports = {
                     id: usuario.id,
                     nome: usuario.nome,
                     email: usuario.email,
+                    telefone: usuario.telefone,
+                    celular: usuario.celular,
                     inclusao: usuario.inclusao,
                     perfil: {
                         id: usuario.perfil_id,
@@ -44,6 +46,8 @@ module.exports = {
                     id: usuario.id,
                     nome: usuario.nome,
                     email: usuario.email,
+                    telefone: usuario.telefone,
+                    celular: usuario.celular,
                     inclusao: usuario.inclusao,
                     perfil: {
                         id: usuario.perfil_id,
@@ -69,12 +73,16 @@ module.exports = {
             return res.status(400).json(json);
         }
 
-        let nome = req.body.nome;
-        let email = req.body.email;
-        let senha = bcrypt.hashSync(req.body.senha, 8);
-        let perfil = req.body.perfil;
+        let dados = {
+            nome: req.body.nome,
+            email: req.body.email,
+            telefone: req.body.telefone,
+            celular: req.body.celular,
+            senha: bcrypt.hashSync(req.body.senha, 8),
+            perfil: req.body.perfil
+        }
 
-        const usuarioId = await Usuario.inserir(nome, email, senha, perfil);
+        const usuarioId = await Usuario.inserir(dados);
 
         if (!usuarioId.insertId) {
             json.error = `Erro ao tentar cadastrar usuário.<br/>Entre em contato com o administrador do sistema.`;
@@ -85,9 +93,11 @@ module.exports = {
 
         json.data = {
             id: usuarioId.insertId,
-            nome: nome,
-            email: email,
-            perfil: perfil,
+            nome: dados.nome,
+            email: dados.email,
+            telefone: dados.telefone,
+            celular: dados.celudar,
+            perfil: dados.perfil,
         };
 
         return res.status(201).json(json);
