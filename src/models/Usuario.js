@@ -3,35 +3,41 @@ const connection = require('../db');
 module.exports = {
 
     obterTodos: async () => {
-        const [usuarios] = await connection.execute('SELECT id, nome, email, senha, foto, inclusao FROM usuarios');
-        return usuarios
+        const [usuario] = await connection.execute('SELECT id, nome, email, senha, inclusao, perfil_id, perfil_nome, perfil_sigla FROM vw_usuario');
+        return usuario
     
     },
 
     obterUnico: async (id) => {
 
-        const [usuarios] = await connection.execute('SELECT id, nome, email, senha, foto, inclusao FROM usuarios WHERE id = ?', [id]);
-        return usuarios
+        const [usuario] = await connection.execute('SELECT id, nome, email, senha, inclusao, perfil_id, perfil_nome, perfil_sigla FROM vw_usuario WHERE id = ?', [id]);
+        return usuario
         
     },
 
-    inserir: async (nome, email, senha, foto) => {
+    inserir: async (nome, email, senha, id_perfil) => {
     
-        const [usuarios] = await connection.execute('INSERT INTO usuarios (nome, email, senha, foto) VALUES (?, ?, ?, ?)', [nome, email, senha, foto]); 
-        return usuarios;
+        const [usuario] = await connection.execute('INSERT INTO usuario (nome, email, senha, id_perfil) VALUES (?, ?, ?, ?)', [nome, email, senha, id_perfil]); 
+        return usuario;
     },
 
-    atualizar: async (id, nome, email, senha, foto) => {
+    atualizar: async (id, dados) => {
+        const { nome, email, perfil} = dados;
+        const [usuario] = await connection.execute('UPDATE usuario SET nome = ?, email = ?, id_perfil = ? WHERE id = ?', [nome, email, perfil, id]);
+        return usuario
 
-        const [usuarios] = await connection.execute('UPDATE usuarios SET nome = ?, email = ?, senha = ?, foto = ? WHERE id = ?', [nome, email, senha, foto]);
-        return usuarios
+    },
+
+    atualizarSenha: async (id, senha) => {
+        const [usuario] = await connection.execute('UPDATE usuario SET senha = ? WHERE id = ?', [senha, id]);
+        return usuario
 
     },
 
     excluir: async (id) => {
 
-        const [usuarios] = await connection.execute('DELETE FROM usuarios WHERE id = ?', [id]);
-        return usuarios;
+        const [usuario] = await connection.execute('DELETE FROM usuario WHERE id = ?', [id]);
+        return usuario;
     }
 
 }   
