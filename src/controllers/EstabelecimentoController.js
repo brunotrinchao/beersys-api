@@ -47,7 +47,7 @@ module.exports = {
             });
         }
         json.data = retorno;
-        json.success = `Estabelecimento obtido com sucesso!`;
+        json.success = `Estabelecimentos obtidos com sucesso!`;
 
         return res.status(200).json(json)
     },
@@ -97,7 +97,7 @@ module.exports = {
             });
         }
         json.data = retorno;
-        json.success = `Estabelecimentos obtidos com sucesso!`;
+        json.success = `Estabelecimento obtido com sucesso!`;
 
         return res.status(200).json(json)
     },

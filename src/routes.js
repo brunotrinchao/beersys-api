@@ -17,5 +17,6 @@ const EstabelecimentoRouter = require('./routes/EstabelecimentoRouter');
 const EstabelecimentoController = require('./controllers/EstabelecimentoController');
 EstabelecimentoRouter(routes, EstabelecimentoController, autenticacaoMiddleware);
 
+// IMPORTA ROTAS
 
 module.exports = routes;

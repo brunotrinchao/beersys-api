@@ -1,0 +1,56 @@
+const connection = require('../db');
+
+module.exports = {
+
+    obterTodos: async (usuarioSessao) => {
+        const [{{lowerCase tabela}}] = await connection.execute(`
+            SELECT 
+                [COLUNAS]
+            FROM vw_{{lowerCase tabela}}
+            WHERE usuario_id = ?`,[usuarioSessao]);
+        return {{lowerCase tabela}}
+    
+    },
+
+    obterUnico: async (id, usuarioSessao) => {
+
+        const [{{lowerCase tabela}}] = await connection.execute(`
+            SELECT 
+                [COLUNAS]
+            FROM vw_{{lowerCase tabela}}
+            WHERE id = ? AND usuario_id = ?`,
+            [id, usuarioSessao]);
+        return {{lowerCase tabela}}
+        
+    },
+
+    inserir: async (dados) => {
+        let { [EXTRAIR DADOS] } = dados;
+        const [{{lowerCase tabela}}] = await connection.execute(`
+            INSERT INTO {{lowerCase tabela}}
+                ([COLUNAS])
+            VALUES ([?])`,
+            [[ARRAY DE VALORES]]); 
+        return {{lowerCase tabela}};
+    },
+
+    atualizar: async (id, dados, usuarioSessao) => {
+        const { [EXTRAIR DADOS] } = dados;
+        const [{{lowerCase tabela}}] = await connection.execute(`
+            UPDATE {{lowerCase tabela}}
+            SET [COLUNAS = ?],
+            WHERE id = ? AND usuario_id = ?`,
+            [[ARRAY DE VALORES], id, usuarioSessao]);
+        return {{lowerCase tabela}}
+
+    },
+
+    excluir: async (id, usuario) => {
+        const [{{lowerCase tabela}}] = await connection.execute(`
+            DELETE FROM usuario
+            WHERE id = ? AND usuario_id = ?`,
+            [id, usuario]);
+        return {{lowerCase tabela}};
+    }
+
+}   

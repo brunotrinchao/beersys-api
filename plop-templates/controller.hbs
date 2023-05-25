@@ -1,0 +1,138 @@
+const {{pascalCase name}} = require('../models/{{pascalCase name}}');
+const {{pascalCase name}}Service = require('../services/{{pascalCase name}}Service');
+const Helper = require('../helpers/helperFunctions');
+
+module.exports = {
+
+    obterTodos: async (req, res) => {
+        let json = { error: '', data: [], success: '' };
+
+        const retToken = Helper.retonaToken(req);
+        const usuarioSessao = retToken.id;
+
+        const {{lowerCase name}}s = await {{pascalCase name}}.obterTodos(usuarioSessao);
+        let retorno = [];
+        if (Object.keys({{lowerCase name}}s).length > 0) {
+            {{lowerCase name}}s.forEach({{lowerCase name}} => {
+                retorno.push({
+                    [COLUNAS]
+                })
+            });
+        }
+        json.data = retorno;
+        json.success = `{{pascalCase name}}s obtidos com sucesso!`;
+
+        return res.status(200).json(json)
+    },
+
+    obterUnico: async (req, res) => {
+        let json = { error: '', data: [], success: '' };
+
+        const retToken = Helper.retonaToken(req);
+        const usuarioSessao = retToken.id;
+
+        let id = req.params.id;
+        let {{lowerCase name}}s = await {{pascalCase name}}.obterUnico(id, usuarioSessao);
+
+        let retorno = [];
+        if (Object.keys({{lowerCase name}}s).length > 0) {
+            {{lowerCase name}}s.forEach({{lowerCase name}} => {
+                retorno.push({
+                    [COLUNAS]
+                })
+            });
+        }
+        json.data = retorno;
+        json.success = `{{pascalCase name}} obtido com sucesso!`;
+
+        return res.status(200).json(json)
+    },
+
+    inserir: async (req, res) => {
+        let json = { error: '', data: {}, success: '' };
+
+        const ret = {{pascalCase name}}Service.validaDados(req.body);
+
+        if (!ret.status) {
+            json.error = ret.msg;
+            return res.status(400).json(json);
+        }
+
+        const retToken = Helper.retonaToken(req);
+        const usuarioSessao = retToken.id;
+
+        let dados = {
+            usuario: usuarioSessao,
+            [INSERT]
+        }
+
+        const {{lowerCase name}}Id = await {{pascalCase name}}.inserir(dados);
+
+        if (!{{lowerCase name}}Id.insertId) {
+            json.error = `Erro ao tentar cadastrar usuário.<br/>Entre em contato com o administrador do sistema.`;
+            return res.status(400).json(json);
+        }
+
+        json.success = `{{pascalCase name}} cadastrado com sucesso!`;
+
+        json.data = { id: {{lowerCase name}}Id.insertId, ...dados};
+
+        return res.status(201).json(json);
+    },
+
+    atualizar: async (req, res) => {
+        let json = { error: '', data: {}, success: '' };
+        
+        const ret = {{pascalCase name}}Service.validaDados(req.body);
+
+        if (!ret.status) {
+            json.error = ret.msg;
+            return res.status(400).json(json);
+        }
+
+        let id = req.params.id;
+        let dados = {
+            [UPDATE]
+        }
+
+        const retToken = Helper.retonaToken(req);
+        const usuarioSessao = retToken.id;
+
+        const {{lowerCase name}} = await {{pascalCase name}}.atualizar(id, dados, usuarioSessao);
+
+        if ({{lowerCase name}}.affectedRows == 0) {
+            json.error = `Erro ao tentar atualizar usuário.<br/>Entre em contato com o administrador do sistema.`;
+            return res.status(400).json(json);
+        }
+
+        json.success = `Dados atualizados com sucesso!`;
+
+        json.data = {id: id,...dados};
+
+        res.status(200).json(json);
+    },
+
+    excluir: async (req, res) => {
+        let json = { error: '', data: {}, success: '' };
+
+        if (!req.params.id) {
+           json.error = 'Informe o {{lowerCase name}}!';
+            return res.status(400).json(json);
+        }
+
+        const retToken = Helper.retonaToken(req);
+        const usuarioSessao = retToken.id;
+
+        const {{lowerCase name}} = await {{pascalCase name}}.excluir(req.params.id, usuarioSessao);
+
+        if ({{lowerCase name}}.affectedRows == 0) {
+            json.error = `Erro ao tentar atualizar senha.<br/>Entre em contato com o administrador do sistema.`;
+            return res.status(400).json(json);
+        }
+
+        v
+
+        res.json(json);
+    }
+
+}
