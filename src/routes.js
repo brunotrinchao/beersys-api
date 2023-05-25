@@ -1,6 +1,7 @@
 const express = require('express');
 const routes = express.Router();
 const autenticacaoMiddleware = require('./middlewares/tokenjwt');
+const uplodImage = require('./middlewares/upload');
 
 // Rotas de Login
 const LoginRouter = require('./routes/LoginRouter');
@@ -18,5 +19,15 @@ const EstabelecimentoController = require('./controllers/EstabelecimentoControll
 EstabelecimentoRouter(routes, EstabelecimentoController, autenticacaoMiddleware);
 
 // IMPORTA ROTAS
+
+// Rotas de Produtos
+const ProdutosRouter = require('./routes/ProdutosRouter');
+const ProdutosController = require('./controllers/ProdutosController');
+ProdutosRouter(routes, ProdutosController, { autenticacaoMiddleware, uplodImage});
+
+// Rotas de Cardapios
+const CardapiosRouter = require('./routes/CardapiosRouter');
+const CardapiosController = require('./controllers/CardapiosController');
+CardapiosRouter(routes, CardapiosController, autenticacaoMiddleware);
 
 module.exports = routes;

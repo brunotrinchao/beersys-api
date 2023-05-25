@@ -18,7 +18,7 @@ export default function (plop) {
             {
                 type: 'add',
                 skipIfExists: true,
-                path: 'src/routes/{{pascalCase name}}.js',
+                path: 'src/routes/{{pascalCase name}}Router.js',
                 templateFile: 'plop-templates/routes.hbs' 
             },
             {
@@ -30,13 +30,13 @@ export default function (plop) {
             {
                 type: 'add',
                 skipIfExists: true,
-                path: 'src/controllers/{{pascalCase name}}.js',
+                path: 'src/controllers/{{pascalCase name}}Controller.js',
                 templateFile: 'plop-templates/controller.hbs' 
             },
             {
                 type: 'add',
                 skipIfExists: true,
-                path: 'src/services/{{pascalCase name}}.js',
+                path: 'src/services/{{pascalCase name}}Service.js',
                 templateFile: 'plop-templates/service.hbs' 
             },
             {
