@@ -2,15 +2,23 @@ const helper = require('../helpers/helperFunctions');
 
 module.exports = {
     
-    validaDados: (dados) => {
+    validaDados: (dados, update = false) => {
         let retorno = { status: true, msg: '' };
 
-        const { nome, email, senha, perfil } = dados;
+        const { nome, email, senha } = dados;
 
-        if (!nome || !email || !senha || !perfil) {
+
+        if (!nome || !email || !senha) {
             return retorno = {
                 status: false,
                 msg: 'Todos os campos são obrigatórios!'
+            }
+        }
+
+        if (update && typeof dados.perfil_id !== 'undefined') {
+            return retorno = {
+                status: false,
+                msg: 'Perfil do usuário não informado'
             }
         }
 
