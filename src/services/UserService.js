@@ -5,27 +5,27 @@ module.exports = {
     validaDados: (dados, update = false) => {
         let retorno = { status: true, msg: '' };
 
-        const { nome, email, senha } = dados;
+        const { name, email, password } = dados;
 
 
-        if (!nome || !email || !senha) {
+        if (!name || !email && (update == false && !password)) {
             return retorno = {
                 status: false,
-                msg: 'Todos os campos são obrigatórios!'
+                message: 'Todos os campos são obrigatórios!'
             }
         }
 
-        if (update && typeof dados.perfil_id !== 'undefined') {
+        if (update && typeof dados.permission_id !== 'undefined') {
             return retorno = {
                 status: false,
-                msg: 'Perfil do usuário não informado'
+                message: 'Perfil do usuário não informado'
             }
         }
 
         if (!helper.validaEmail(email)) {
             return retorno = {
                 status: false,
-                msg: 'E-mail inválido!'
+                message: 'E-mail inválido!'
             }
         }
 
