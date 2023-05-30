@@ -30,9 +30,4 @@ const ContactRouter = require('./routes/ContactRouter');
 const ContactController = require('./controllers/ContactController');
 ContactRouter(routes, ContactController, autenticacaoMiddleware);
 
-// Rotas de Contact
-const ContactRouter = require('./routes/ContactRouter');
-const ContactController = require('./controllers/ContactController');
-ContactRouter(routes, ContactController, autenticacaoMiddleware);
-
 module.exports = routes;

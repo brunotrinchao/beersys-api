@@ -3,7 +3,7 @@ const db = require('../config/dbSequelize');
 const User = require('./User');
 const Address = require('./Address');
 
-const CompanyModel = db.define("Company", {
+const CompanyModel = db.define("company", {
     id: {
       type: Sequelize.INTEGER.UNSIGNED,
       primaryKey: true,
@@ -37,7 +37,7 @@ const CompanyModel = db.define("Company", {
       type: DataTypes.INTEGER.UNSIGNED,
       allowNull: false,
       references: {
-        model: 'User',
+        model: 'users',
         key: 'id'
       }
     }
