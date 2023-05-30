@@ -3,7 +3,7 @@ const db = require('../config/dbSequelize');
 const User = require('./User');
 const Address = require('./Address');
 
-const Company = db.define("company", {
+const CompanyModel = db.define("Company", {
     id: {
       type: Sequelize.INTEGER.UNSIGNED,
       primaryKey: true,
@@ -20,6 +20,11 @@ const Company = db.define("company", {
     photo: {
       type: Sequelize.STRING
     },
+    status: {
+      type: Sequelize.CHAR(3),
+      valueDefault: 'ATI',
+      allowNull: false,
+    },
     createdAt: {
       allowNull: false,
       type: Sequelize.DATE,
@@ -32,13 +37,17 @@ const Company = db.define("company", {
       type: DataTypes.INTEGER.UNSIGNED,
       allowNull: false,
       references: {
-        model: 'users',
+        model: 'User',
         key: 'id'
       }
     }
 });
 
-Company.belongsTo(User, { foreignKey: 'users_id' });
-Address.belongsTo(Company, { foreignKey: 'company_id', sourceKey: "id" });
+// console.log(CompanyModel);
+// Company.sync();
 
-module.exports = Company;
+// CompanyModel.belongsTo(User, { foreignKey: 'users_id' });
+// Address.belongsTo(Company, { foreignKey: 'company_id', sourceKey: "id" });
+
+
+module.exports = CompanyModel;

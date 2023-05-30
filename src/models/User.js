@@ -1,8 +1,9 @@
 const { Sequelize, DataTypes } = require('sequelize');
 const db = require('../config/dbSequelize');
 const Permission = require('./Permission');
+const Company = require('./Company');
 
-const User = db.define("users", {
+const User = db.define("User", {
     id: {
       type: Sequelize.INTEGER.UNSIGNED,
       primaryKey: true,
@@ -36,21 +37,30 @@ const User = db.define("users", {
     createdAt: {
       allowNull: false,
       type: Sequelize.DATE,
+      defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
     },
     updatedAt: {
       allowNull: false,
-      type: Sequelize.DATE
+      type: Sequelize.DATE,
+      defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
     },
     permission_id: {
       type: DataTypes.INTEGER.UNSIGNED,
       allowNull: false,
       references: {
-        model: 'permissions',
+        model: 'Permission',
         key: 'id'
       }
     }
 });
+// User.sync();
 
 User.belongsTo(Permission, { foreignKey: 'permission_id' });
+
+// User.associate = (models) => {
+//   User.hasMany(models.CompanyModel);
+// }
+
+//  Permission.hasOne(User, { foreignKey: 'permission_id' });
 
 module.exports = User;

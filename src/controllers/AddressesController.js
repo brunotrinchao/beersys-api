@@ -1,7 +1,7 @@
-const Company = require('../models/Company');
-const User = require('../models/User');
 const Address = require('../models/Address');
-const CompanyService = require('../services/CompanyService');
+// const Company = require('../models/Company');
+// const User = require('../models/User');
+// const CompanyService = require('../services/CompanyService');
 const bcrypt = require('bcrypt');
 const db = require('../config/dbSequelize');
 
@@ -11,16 +11,12 @@ module.exports = {
 
     findAll: async (req, res) => {
         try {
-            const autentication = Helper.retonaToken(req);
-            if (!autentication.id) {
-                throw new Error(`Usuário não autenticado!`);
-            }
-
-             const filter = {
+            const filter = {
                 where: {
-                    users_id: autentication.id
+                    companies_id: req.params.companyId
                 }
             }
+            console.log(filter)
 
             const { page, limit } = req.query;
 
@@ -28,8 +24,8 @@ module.exports = {
 
             const attributes = {
                 ...filter,
-                attributes: ['id', 'name', 'description', 'photo', 'createdAt', 'updatedAt'],
-                order: [['name', 'ASC']],
+                attributes: ['id', 'zipcode', 'address', 'number', 'country', 'createdAt', 'updatedAt'],
+                order: [['id', 'ASC']],
                 include: [
                     // {
                     //     attributes: ['id', 'name', 'email', 'phone', 'mobile', 'createdAt', 'updatedAt'],
@@ -44,9 +40,9 @@ module.exports = {
 
             const where = {...attributes, limit: retPaginate.limit, offset: retPaginate.offset };
 
-            const company = await Company.findAndCountAll(where);
+            const address = await Address.findAndCountAll(where);
 
-            const data = Helper.formataPaginacao(company, retPaginate.limit);
+            const data = Helper.formataPaginacao(address, retPaginate.limit);
 
             const retorno = {
                 ...data,
@@ -66,17 +62,13 @@ module.exports = {
 
     findOne: async (req, res) => {
         try {
-                        const autentication = Helper.retonaToken(req);
-            if (!autentication.id) {
-                throw new Error(`Usuário não autenticado!`);
-            }
-            
+
             const options = {
                 where: {
                     id: req.params.id,
-                    users_id: autentication.id
+                    companies_id: req.params.companyId
                 },
-                attributes: ['id', 'name', 'description', 'photo', 'createdAt', 'updatedAt'],
+                 attributes: ['id', 'zipcode', 'address', 'number', 'country', 'createdAt', 'updatedAt'],
                 include: [
                     // {
                     //     attributes: ['id', 'name', 'email', 'phone', 'mobile', 'createdAt', 'updatedAt'],
@@ -84,14 +76,14 @@ module.exports = {
                     // }
                 ]
             }
-            const company = await Company.findOne(options);
+            const address = await Address.findOne(options);
 
-            if (!company) {
-                throw new Error(`Estabelecimento não encontrado!`);
+            if (!address) {
+                throw new Error(`Endereço não encontrado!`);
             }
 
             const retorno = {
-                data: company,
+                data: address,
                 status: true,
                 menssage: ``
             }
@@ -109,41 +101,32 @@ module.exports = {
 
     create: async (req, res) => {
         try {
-            const autentication = Helper.retonaToken(req);
-            if (!autentication.id) {
-                throw new Error(`Usuário não autenticado!`);
-            }
 
-            const ret = CompanyService.validaDados(req.body);
+            // const ret = CompanyService.validaDados(req.body);
 
-            if (!ret.status) {
-                throw new Error(ret.message );
-            }
+            // if (!ret.status) {
+            //     throw new Error(ret.message );
+            // }
 
             let payload = {
-                name: req.body.name,
-                description: req.body.description ?? null,
-                photo: req.body.photo ?? null,
-                status: req.body.status ?? 'ATI',
-                users_id: autentication.id,
+                zipcode: req.body.zipcode ?? null,
+                address: req.body.address ?? null,
+                number: req.body.number ?? null,
+                neighborhood: req.body.neighborhood ?? null,
+                country: req.body.country ?? null,
+                city: req.body.city ?? null,
+                companies_id: req.params.companyId,
             }
 
-
-
-            const company = await Company.create(payload);
+            const address = await Address.create(payload);
 
             const retorno = {
-                data: company,
+                data: address,
                 status: true,
                 menssage: `Cadastro realizado com sucesso!`
             }
             res.status(200).json(retorno);
         } catch (error) {
-            let message = error.message;
-            console.log(error)
-            if (error.errors[0].message = "email must be unique") {
-                message = `O e-mail ${req.body.email} já está cadastrado!`;
-            }
             const retorno = {
                 data: [],
                 status: false,

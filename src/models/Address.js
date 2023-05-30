@@ -2,7 +2,7 @@ const { Sequelize, DataTypes } = require('sequelize');
 const db = require('../config/dbSequelize');
 const Company = require('./Company');
 
-const model = db.define("address", {
+const Address = db.define("Address", {
     id: {
       type: Sequelize.INTEGER.UNSIGNED,
       primaryKey: true,
@@ -24,6 +24,9 @@ const model = db.define("address", {
     country: {
       type: Sequelize.STRING
     },
+    city: {
+      type: Sequelize.STRING
+    },
     createdAt: {
       allowNull: false,
       type: Sequelize.DATE,
@@ -32,11 +35,11 @@ const model = db.define("address", {
       allowNull: false,
       type: Sequelize.DATE
     },
-    company_id: {
+    companies_id: {
       type: DataTypes.INTEGER.UNSIGNED,
       allowNull: false,
       references: {
-        model: 'company',
+        model: 'companies',
         key: 'id'
       }
     }
@@ -44,4 +47,6 @@ const model = db.define("address", {
     tableName: 'address'
 });
 
-module.exports = model;
+// Address.sync();
+
+module.exports = Address;

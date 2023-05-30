@@ -101,6 +101,8 @@ module.exports = {
                 permission_id: req.body.permission_id ?? 2,
             }
 
+            console.log(payload)
+
             const user = await User.create(payload);
                      
             
@@ -113,7 +115,7 @@ module.exports = {
             res.status(200).json(retorno);
         } catch (error) {
             let message = error.message;
-
+            console.log(error)
             if (error.errors[0].message = "email must be unique") {
                 message = `O e-mail ${req.body.email} já está cadastrado!`;
             }

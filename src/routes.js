@@ -18,6 +18,11 @@ const CompanyRouter = require('./routes/CompanyRouter');
 const CompaniesController = require('./controllers/CompaniesController');
 CompanyRouter(routes, CompaniesController, autenticacaoMiddleware);
 
+// Rotas de Address
+const AddressRouter = require('./routes/AddressRouter');
+const AddressesController = require('./controllers/AddressesController');
+AddressRouter(routes, AddressesController, autenticacaoMiddleware);
+
 // IMPORTA ROTAS
 
 module.exports = routes;
