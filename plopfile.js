@@ -1,4 +1,4 @@
-export default function (plop) {
+const generatorPlop =  (plop) => {
     // controller generator
     plop.setGenerator('Endpoint completo', {
         description: 'Gerar um endpoint completo (router, model, controller)',
@@ -7,11 +7,6 @@ export default function (plop) {
             type: 'input',
             name: 'name',
             message: 'Informe o nome do endpoint:'
-            },
-            {
-            type: 'input',
-            name: 'tabela',
-            message: 'Informe o nome da tabela:'
             }
         ],
         actions: [
@@ -49,3 +44,5 @@ export default function (plop) {
         ]
     });
 };
+
+module.exports = generatorPlop;

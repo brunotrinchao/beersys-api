@@ -1,7 +1,7 @@
 const { Sequelize, DataTypes } = require('sequelize');
 const db = require('../config/dbSequelize');
 
-const {{pascalCase name}} = db.define("{{pascalCase name}}", {
+const Contact = db.define("Contact", {
     id: {
       type: Sequelize.INTEGER.UNSIGNED,
       primaryKey: true,
@@ -20,4 +20,4 @@ const {{pascalCase name}} = db.define("{{pascalCase name}}", {
 
 // Address.sync();
 
-module.exports = {{pascalCase name}};
+module.exports = Contact;

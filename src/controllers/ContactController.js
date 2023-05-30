@@ -1,6 +1,6 @@
-const {{pascalCase name}} = require('../models/{{pascalCase name}}');
+const Contact = require('../models/Contact');
 
-// const {{pascalCase name}}Service = require('../services/{{pascalCase name}}Service');
+// const ContactService = require('../services/ContactService');
 const bcrypt = require('bcrypt');
 const db = require('../config/dbSequelize');
 
@@ -31,9 +31,9 @@ module.exports = {
 
             const where = {...attributes, limit: retPaginate.limit, offset: retPaginate.offset };
 
-            const {{lowerCase name}} = await {{pascalCase name}}.findAndCountAll(where);
+            const contact = await Contact.findAndCountAll(where);
 
-            const data = Helper.formataPaginacao({{lowerCase name}}, retPaginate.limit);
+            const data = Helper.formataPaginacao(contact, retPaginate.limit);
 
             const retorno = {
                 ...data,
@@ -64,14 +64,14 @@ module.exports = {
                     // }
                 ]
             }
-            const {{lowerCase name}} = await {{pascalCase name}}.findOne(options);
+            const contact = await Contact.findOne(options);
 
-            if (!{{lowerCase name}}) {
+            if (!contact) {
                 throw new Error(`[NOME] não encontrado!`);
             }
 
             const retorno = {
-                data: {{lowerCase name}},
+                data: contact,
                 status: true,
                 menssage: ``
             }
@@ -90,7 +90,7 @@ module.exports = {
     create: async (req, res) => {
         try {
 
-            // const ret = {{pascalCase name}}Service.validaDados(req.body);
+            // const ret = ContactService.validaDados(req.body);
 
             // if (!ret.status) {
             //     throw new Error(ret.message );
@@ -99,10 +99,10 @@ module.exports = {
             let payload = {
             }
 
-            const {{lowerCase name}} = await {{pascalCase name}}.create(payload);
+            const contact = await Contact.create(payload);
 
             const retorno = {
-                data: {{lowerCase name}},
+                data: contact,
                 status: true,
                 menssage: `Cadastro realizado com sucesso!`
             }
@@ -119,11 +119,8 @@ module.exports = {
 
     update: async (req, res) => {
         try{
-            // const ret = {{pascalCase name}}Service.validaDados(req.body, true);
+            // const ret = ContactService.validaDados(req.body, true);
 
-            {{!-- if (!ret.status) {
-                throw new Error(ret.message );
-            } --}}
 
             const options = {
                 where: {
@@ -133,7 +130,7 @@ module.exports = {
             const payload = {
             }
                 
-            await {{pascalCase name}}.update(payload, options);
+            await Contact.update(payload, options);
 
             const optionsFind = {
                 where: {
@@ -142,14 +139,14 @@ module.exports = {
                 attributes: ['id', 'createdAt', 'updatedAt']
             }
 
-            const {{lowerCase name}} = await {{pascalCase name}}.findOne(optionsFind);
+            const contact = await Contact.findOne(optionsFind);
 
-            if (!{{lowerCase name}}) {
+            if (!contact) {
                 throw new Error(`[NOME] não encontrado!`);
             }
                 
             const retorno = {
-                data: {{lowerCase name}},
+                data: contact,
                 status: true,
                 menssage: `[NOME] atualizado com sucesso!`
             }
@@ -178,7 +175,7 @@ module.exports = {
                 }
             }
                 
-            await {{pascalCase name}}.destroy(options);
+            await Contact.destroy(options);
 
             const retorno = {
                     data: [],
