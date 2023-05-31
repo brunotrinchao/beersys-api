@@ -14,16 +14,18 @@ const Contact = db.define("contact", {
     },
     type: {
       type: Sequelize.CHAR(3),
-      comment: 'EMA:E-mail|PHO:Phone|CEL:Cellphone|WAP:WhatsApp',
+      comment: 'EMA:E-mail|TEL:Telefone|CEL:Celular|WAP:WhatsApp',
       allowNull: false,
     },
     createdAt: {
       allowNull: false,
       type: Sequelize.DATE,
+      defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
     },
     updatedAt: {
       allowNull: false,
-      type: Sequelize.DATE
+      type: Sequelize.DATE,
+      defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
     },
     companies_id: {
       type: DataTypes.INTEGER.UNSIGNED,

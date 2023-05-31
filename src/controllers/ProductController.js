@@ -1,6 +1,6 @@
-const Menu = require('../models/Menu');
+const Product = require('../models/Product');
 
-// const MenuService = require('../services/MenuService');
+const ProductService = require('../services/ProductService');
 const bcrypt = require('bcrypt');
 const db = require('../config/dbSequelize');
 
@@ -12,7 +12,7 @@ module.exports = {
         try {
             const filter = {
                 where: {
-                    companies_id: req.params.companyId
+                    categories_id: req.params.categoryId
                 }
             }
 
@@ -22,7 +22,7 @@ module.exports = {
 
             const attributes = {
                 ...filter,
-                attributes: ['id', 'createdAt', 'updatedAt'],
+                attributes: ['id', 'name', 'description', 'photo', 'price', 'createdAt', 'updatedAt'],
                 order: [['id', 'ASC']],
                 include: [
                     // {,
@@ -32,9 +32,9 @@ module.exports = {
 
             const where = {...attributes, limit: retPaginate.limit, offset: retPaginate.offset };
 
-            const menu = await Menu.findAndCountAll(where);
+            const product = await Product.findAndCountAll(where);
 
-            const data = Helper.formataPaginacao(menu, retPaginate.limit);
+            const data = Helper.formataPaginacao(product, retPaginate.limit);
 
             const retorno = {
                 ...data,
@@ -58,22 +58,22 @@ module.exports = {
             const options = {
                 where: {
                     id: req.params.id,
-                    companies_id: req.params.companyId
+                    categories_id: req.params.categoryId
                 },
-                 attributes: ['id', 'createdAt', 'updatedAt'],
+                attributes: ['id', 'name', 'description', 'photo', 'price', 'createdAt', 'updatedAt'],
                 include: [
                     // {
                     // }
                 ]
             }
-            const menu = await Menu.findOne(options);
+            const product = await Product.findOne(options);
 
-            if (!menu) {
-                throw new Error(`[NOME] não encontrado!`);
+            if (!product) {
+                throw new Error(`Produto não encontrado!`);
             }
 
             const retorno = {
-                data: menu,
+                data: product,
                 status: true,
                 menssage: ``
             }
@@ -92,25 +92,30 @@ module.exports = {
     create: async (req, res) => {
         try {
 
-            // const ret = MenuService.validaDados(req.body);
+            const ret = ProductService.validaDados(req.body);
 
-            // if (!ret.status) {
-            //     throw new Error(ret.message );
-            // }
-
-            let payload = {
-                 companies_id: req.params.companyId,
+            if (!ret.status) {
+                throw new Error(ret.message );
             }
 
-            const menu = await Menu.create(payload);
+            let payload = {
+                name: req.body.name,
+                description: req.body.description ?? null,
+                photo: req.body.photo ?? null,
+                price: req.body.price,
+                categories_id: req.params.categoryId
+            }
+
+            const product = await Product.create(payload);
 
             const retorno = {
-                data: menu,
+                data: product,
                 status: true,
                 menssage: `Cadastro realizado com sucesso!`
             }
             res.status(200).json(retorno);
         } catch (error) {
+            console.log(error)
             const retorno = {
                 data: [],
                 status: false,
@@ -122,7 +127,7 @@ module.exports = {
 
     update: async (req, res) => {
         try{
-            // const ret = MenuService.validaDados(req.body, true);
+            // const ret = ProductService.validaDados(req.body, true);
 
 
             const options = {
@@ -133,7 +138,7 @@ module.exports = {
             const payload = {
             }
                 
-            await Menu.update(payload, options);
+            await Product.update(payload, options);
 
             const optionsFind = {
                 where: {
@@ -142,14 +147,14 @@ module.exports = {
                 attributes: ['id', 'createdAt', 'updatedAt']
             }
 
-            const menu = await Menu.findOne(optionsFind);
+            const product = await Product.findOne(optionsFind);
 
-            if (!menu) {
+            if (!product) {
                 throw new Error(`[NOME] não encontrado!`);
             }
                 
             const retorno = {
-                data: menu,
+                data: product,
                 status: true,
                 menssage: `[NOME] atualizado com sucesso!`
             }
@@ -178,7 +183,7 @@ module.exports = {
                 }
             }
                 
-            await Menu.destroy(options);
+            await Product.destroy(options);
 
             const retorno = {
                     data: [],

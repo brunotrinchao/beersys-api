@@ -57,10 +57,7 @@ const User = db.define("user", {
 
 User.belongsTo(Permission, { foreignKey: 'permission_id' });
 
-// User.associate = (models) => {
-//   User.hasMany(models.CompanyModel);
-// }
+User.hasMany(Company, { foreignKey: 'users_id' });
 
-//  Permission.hasOne(User, { foreignKey: 'permission_id' });
 
 module.exports = User;

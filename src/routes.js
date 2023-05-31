@@ -25,6 +25,16 @@ AddressRouter(routes, AddressesController, autenticacaoMiddleware);
 
 // IMPORTA ROTAS
 
+// Rotas de Product
+const ProductRouter = require('./routes/ProductRouter');
+const ProductController = require('./controllers/ProductController');
+ProductRouter(routes, ProductController, autenticacaoMiddleware);
+
+// Rotas de Category
+const CategoryRouter = require('./routes/CategoryRouter');
+const CategoriesController = require('./controllers/CategoriesController');
+CategoryRouter(routes, CategoriesController, autenticacaoMiddleware);
+
 // Rotas de Menu
 const MenuRouter = require('./routes/MenuRouter');
 const MenuController = require('./controllers/MenuController');

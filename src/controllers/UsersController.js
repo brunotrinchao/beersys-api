@@ -1,5 +1,8 @@
 const User = require('../models/User');
 const Permission = require('../models/Permission');
+const Company = require('../models/Company');
+const Address = require('../models/Address');
+
 const UserService = require('../services/UserService');
 const bcrypt = require('bcrypt');
 const db = require('../config/dbSequelize');
@@ -58,6 +61,16 @@ module.exports = {
                     {
                         attributes: ['id', 'key', 'name'],
                         model: Permission,
+                    },
+                    {
+                        attributes: ['id', 'name', 'description', 'photo', 'status', 'createdAt', 'updatedAt'],
+                        model: Company,
+                        include: [
+                            {
+                                attributes: ['id','zipcode','address','number','neighborhood','country','city', 'createdAt', 'updatedAt'],
+                                model: Address,
+                            }
+                        ]
                     }
                 ]
             }
@@ -100,9 +113,6 @@ module.exports = {
                 password: bcrypt.hashSync(req.body.password, 8),
                 permission_id: req.body.permission_id ?? 2,
             }
-
-            console.log(payload)
-
             const user = await User.create(payload);
                      
             

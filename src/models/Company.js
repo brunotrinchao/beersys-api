@@ -3,7 +3,7 @@ const db = require('../config/dbSequelize');
 const User = require('./User');
 const Address = require('./Address');
 
-const CompanyModel = db.define("company", {
+const Company = db.define("company", {
     id: {
       type: Sequelize.INTEGER.UNSIGNED,
       primaryKey: true,
@@ -28,10 +28,12 @@ const CompanyModel = db.define("company", {
     createdAt: {
       allowNull: false,
       type: Sequelize.DATE,
+      defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
     },
     updatedAt: {
       allowNull: false,
-      type: Sequelize.DATE
+      type: Sequelize.DATE,
+      defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
     },
     users_id: {
       type: DataTypes.INTEGER.UNSIGNED,
@@ -46,8 +48,7 @@ const CompanyModel = db.define("company", {
 // console.log(CompanyModel);
 // Company.sync();
 
-// CompanyModel.belongsTo(User, { foreignKey: 'users_id' });
-// Address.belongsTo(Company, { foreignKey: 'company_id', sourceKey: "id" });
+Company.hasOne(Address, { foreignKey: 'companies_id' });
 
 
-module.exports = CompanyModel;
+module.exports = Company;

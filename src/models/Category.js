@@ -1,39 +1,41 @@
 const { Sequelize, DataTypes } = require('sequelize');
 const db = require('../config/dbSequelize');
 
-const Menu = db.define("menu", {
+const Category = db.define("category", {
     id: {
       type: Sequelize.INTEGER.UNSIGNED,
       primaryKey: true,
       autoIncrement: true,
       allowNull: false,
     },
-  status: {
-    type: Sequelize.CHAR(3),
-    allowNull: false,
-    defaultValue: 'ATI',
-    comment: 'ATI:Ativo|INA:Inativo',
-  },
+    name: {
+      type: Sequelize.STRING,
+      allowNull: false,
+    },
+    status: {
+      type: Sequelize.CHAR(3),
+      valueDefault: 'ATI',
+      allowNull: false,
+      comment: 'ATI = Ativo, INA = Inativo',
+    },
     createdAt: {
       allowNull: false,
       type: Sequelize.DATE,
-      defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
     },
     updatedAt: {
       allowNull: false,
-      type: Sequelize.DATE,
-      defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+      type: Sequelize.DATE
     },
-    companies_id: {
+    menus_id: {
       type: DataTypes.INTEGER.UNSIGNED,
       allowNull: false,
       references: {
-        model: 'companies',
+        model: 'menus',
         key: 'id'
       }
     }
 });
 
-// Menu.sync();
+// Category.sync({ force: true });
 
-module.exports = Menu;
+module.exports = Category;

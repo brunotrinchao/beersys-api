@@ -5,19 +5,25 @@ module.exports = {
     validaDados: (dados) => {
         let retorno = { status: true, msg: '' };
 
-        const { contact, type } = dados;
+        const { name, status } = dados;
 
-        if (!contact) {
+        if (!name) {
             return retorno = {
                 status: false,
-                message: 'Contato é um campo obrigatórios'
+                message: 'O Nome da categoria é obrigatórios'
             }
         }
 
-        if (['EMA', 'TEL', 'CEL', 'WAP'].indexOf(type) === -1) {
+        return retorno;
+    },
+
+    validaStatus: (status) => {
+        let retorno = { status: true, msg: '' };
+
+        if (['ATI', 'INA'].indexOf(status) === -1) {
             return retorno = {
                 status: false,
-                message: 'Informe um tipo de contato válido.'
+                 message: 'Informe um status válido.'
             }
         }
 

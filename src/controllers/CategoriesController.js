@@ -1,6 +1,6 @@
-const Menu = require('../models/Menu');
+const Category = require('../models/Category');
 
-// const MenuService = require('../services/MenuService');
+const CategoryService = require('../services/CategoryService');
 const bcrypt = require('bcrypt');
 const db = require('../config/dbSequelize');
 
@@ -12,9 +12,10 @@ module.exports = {
         try {
             const filter = {
                 where: {
-                    companies_id: req.params.companyId
+                    categories_id: req.params.companyId
                 }
             }
+
 
             const { page, limit } = req.query;
 
@@ -22,8 +23,8 @@ module.exports = {
 
             const attributes = {
                 ...filter,
-                attributes: ['id', 'createdAt', 'updatedAt'],
-                order: [['id', 'ASC']],
+                attributes: ['id', 'name', 'status', 'createdAt', 'updatedAt'],
+                order: [['name', 'ASC']],
                 include: [
                     // {,
                     // }
@@ -32,9 +33,9 @@ module.exports = {
 
             const where = {...attributes, limit: retPaginate.limit, offset: retPaginate.offset };
 
-            const menu = await Menu.findAndCountAll(where);
+            const category = await Category.findAndCountAll(where);
 
-            const data = Helper.formataPaginacao(menu, retPaginate.limit);
+            const data = Helper.formataPaginacao(category, retPaginate.limit);
 
             const retorno = {
                 ...data,
@@ -57,23 +58,22 @@ module.exports = {
 
             const options = {
                 where: {
-                    id: req.params.id,
-                    companies_id: req.params.companyId
+                    id: req.params.id
                 },
-                 attributes: ['id', 'createdAt', 'updatedAt'],
+                attributes: ['id', 'name', 'status', 'createdAt', 'updatedAt'],
                 include: [
                     // {
                     // }
                 ]
             }
-            const menu = await Menu.findOne(options);
+            const category = await Category.findOne(options);
 
-            if (!menu) {
-                throw new Error(`[NOME] não encontrado!`);
+            if (!category) {
+                throw new Error(`Categoria não encontrado!`);
             }
 
             const retorno = {
-                data: menu,
+                data: category,
                 status: true,
                 menssage: ``
             }
@@ -92,25 +92,35 @@ module.exports = {
     create: async (req, res) => {
         try {
 
-            // const ret = MenuService.validaDados(req.body);
+            const ret = CategoryService.validaDados(req.body);
 
-            // if (!ret.status) {
-            //     throw new Error(ret.message );
-            // }
-
-            let payload = {
-                 companies_id: req.params.companyId,
+            if (!ret.status) {
+                throw new Error(ret.message );
+            }
+            
+            if (typeof req.body.status !== 'undefined') {
+                const retStatus = CategoryService.validaStatus(req.body)
+                if (!retStatus.status) {
+                    throw new Error(retStatus.message);
+                }
             }
 
-            const menu = await Menu.create(payload);
+            let payload = {
+                name: req.body.name,
+                status: req.body.status ?? 'ATI',
+                menus_id: req.params.menuId,
+            }
+
+            const category = await Category.create(payload);
 
             const retorno = {
-                data: menu,
+                data: category,
                 status: true,
                 menssage: `Cadastro realizado com sucesso!`
             }
             res.status(200).json(retorno);
         } catch (error) {
+            console.log(error)
             const retorno = {
                 data: [],
                 status: false,
@@ -122,7 +132,7 @@ module.exports = {
 
     update: async (req, res) => {
         try{
-            // const ret = MenuService.validaDados(req.body, true);
+            // const ret = CategoryService.validaDados(req.body, true);
 
 
             const options = {
@@ -133,7 +143,7 @@ module.exports = {
             const payload = {
             }
                 
-            await Menu.update(payload, options);
+            await Category.update(payload, options);
 
             const optionsFind = {
                 where: {
@@ -142,14 +152,14 @@ module.exports = {
                 attributes: ['id', 'createdAt', 'updatedAt']
             }
 
-            const menu = await Menu.findOne(optionsFind);
+            const category = await Category.findOne(optionsFind);
 
-            if (!menu) {
+            if (!category) {
                 throw new Error(`[NOME] não encontrado!`);
             }
                 
             const retorno = {
-                data: menu,
+                data: category,
                 status: true,
                 menssage: `[NOME] atualizado com sucesso!`
             }
@@ -165,6 +175,53 @@ module.exports = {
         }
     },
 
+    updateStatus: async (req, res) => {
+        try{
+
+            if (!req.params.id) {
+                throw new Error('Informe o id do usuário!');
+            }
+
+            const options = {
+                where: {
+                    id: req.params.id,
+                    menus_id: req.params.menuId,
+                }
+            }
+                
+            await Category.update(playload, options);
+
+            const optionsFind = {
+                where: {
+                    id: req.params.id
+                },
+                attributes: ['id', 'name', 'status', 'createdAt', 'updatedAt']
+            }
+
+            const category = await Category.findOne(optionsFind);
+
+            if (!category) {
+                throw new Error(`Categoria não encontrado!`);
+            }
+                
+            const retorno = {
+                    data: user,
+                    status: true,
+                    menssage: `Status da categoria atualizado com sucesso!`
+                }
+
+            res.status(200).json(retorno);
+        } catch (error) {
+            const retorno = {
+                data: [],
+                status: false,
+                menssage: error.message
+            }
+            res.status(400).json(retorno);
+        }
+
+    },
+
     delete: async (req, res) => {
         try{
 
@@ -178,7 +235,7 @@ module.exports = {
                 }
             }
                 
-            await Menu.destroy(options);
+            await Category.destroy(options);
 
             const retorno = {
                     data: [],
