@@ -1,6 +1,6 @@
-const Contact = require('../models/Contact');
+const Menu = require('../models/Menu');
 
-const ContactService = require('../services/ContactService');
+// const MenuService = require('../services/MenuService');
 const bcrypt = require('bcrypt');
 const db = require('../config/dbSequelize');
 
@@ -11,9 +11,7 @@ module.exports = {
     findAll: async (req, res) => {
         try {
             const filter = {
-                where: {
-                     companies_id: req.params.companyId
-                }
+                where: {}
             }
 
 
@@ -23,7 +21,7 @@ module.exports = {
 
             const attributes = {
                 ...filter,
-                attributes: ['id', 'contact', 'type',  'createdAt', 'updatedAt'],
+                attributes: ['id', 'createdAt', 'updatedAt'],
                 order: [['id', 'ASC']],
                 include: [
                     // {,
@@ -33,9 +31,9 @@ module.exports = {
 
             const where = {...attributes, limit: retPaginate.limit, offset: retPaginate.offset };
 
-            const contact = await Contact.findAndCountAll(where);
+            const menu = await Menu.findAndCountAll(where);
 
-            const data = Helper.formataPaginacao(contact, retPaginate.limit);
+            const data = Helper.formataPaginacao(menu, retPaginate.limit);
 
             const retorno = {
                 ...data,
@@ -58,23 +56,22 @@ module.exports = {
 
             const options = {
                 where: {
-                    id: req.params.id,
-                    companies_id: req.params.companyId
+                    id: req.params.id
                 },
-                attributes: ['id', 'contact', 'type',  'createdAt', 'updatedAt'],
+                 attributes: ['id', 'createdAt', 'updatedAt'],
                 include: [
                     // {
                     // }
                 ]
             }
-            const contact = await Contact.findOne(options);
+            const menu = await Menu.findOne(options);
 
-            if (!contact) {
+            if (!menu) {
                 throw new Error(`[NOME] não encontrado!`);
             }
 
             const retorno = {
-                data: contact,
+                data: menu,
                 status: true,
                 menssage: ``
             }
@@ -93,33 +90,28 @@ module.exports = {
     create: async (req, res) => {
         try {
 
-            const ret = ContactService.validaDados(req.body);
+            // const ret = MenuService.validaDados(req.body);
 
-            if (!ret.status) {
-                throw new Error(ret.message );
-            }
+            // if (!ret.status) {
+            //     throw new Error(ret.message );
+            // }
 
             let payload = {
-                contact: req.body.contact,
-                type: req.body.type,
-                companies_id: req.params.companyId
             }
 
-            
-            const contact = await Contact.create(payload);
+            const menu = await Menu.create(payload);
 
             const retorno = {
-                data: contact,
+                data: menu,
                 status: true,
                 menssage: `Cadastro realizado com sucesso!`
             }
             res.status(200).json(retorno);
         } catch (error) {
-            console.log(error);
             const retorno = {
                 data: [],
                 status: false,
-                menssage: error.message
+                menssage: error
             }
             res.status(400).json(retorno);
         }
@@ -127,42 +119,36 @@ module.exports = {
 
     update: async (req, res) => {
         try{
-            const ret = ContactService.validaDados(req.body, true);
+            // const ret = MenuService.validaDados(req.body, true);
 
-            if (!ret.status) {
-                throw new Error(ret.message);
-            }
 
             const options = {
                 where: {
-                    id: req.params.id,
-                    companies_id: req.params.companyId
+                    id: req.params.id
                 }
             }
             const payload = {
-                contact: req.body.contact,
-                type: req.body.type,
             }
                 
-            await Contact.update(payload, options);
+            await Menu.update(payload, options);
 
             const optionsFind = {
                 where: {
                     id: req.params.id
                 },
-                attributes: ['id', 'contact', 'type', 'createdAt', 'updatedAt']
+                attributes: ['id', 'createdAt', 'updatedAt']
             }
 
-            const contact = await Contact.findOne(optionsFind);
+            const menu = await Menu.findOne(optionsFind);
 
-            if (!contact) {
-                throw new Error(`Contato não encontrado!`);
+            if (!menu) {
+                throw new Error(`[NOME] não encontrado!`);
             }
                 
             const retorno = {
-                data: contact,
+                data: menu,
                 status: true,
-                menssage: `Contato atualizado com sucesso!`
+                menssage: `[NOME] atualizado com sucesso!`
             }
 
             res.status(200).json(retorno);
@@ -170,7 +156,7 @@ module.exports = {
             const retorno = {
                 data: [],
                 status: false,
-                menssage: error.message
+                menssage: message
             }
             res.status(400).json(retorno);
         }
@@ -185,17 +171,16 @@ module.exports = {
                 
             const options = {
                 where: {
-                    id: req.params.id,
-                    companies_id: req.params.companyId
+                    id: req.params.id
                 }
             }
                 
-            await Contact.destroy(options);
+            await Menu.destroy(options);
 
             const retorno = {
                     data: [],
                     status: true,
-                    menssage: `Contato excluído com sucesso!`
+                    menssage: `[NOME] excluído com sucesso!`
                 }
 
             res.status(200).json(retorno);

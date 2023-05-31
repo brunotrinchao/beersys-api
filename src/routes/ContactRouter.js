@@ -1,7 +1,7 @@
 module.exports = (routes, controller, autenticacaoMiddleware) => {
-    routes.get('/contacts', autenticacaoMiddleware, controller.findAll);
-    routes.get('/contacts/:id', autenticacaoMiddleware, controller.findOne);
-    routes.post('/contacts', autenticacaoMiddleware, controller.create);
-    routes.put('/contacts/:id', autenticacaoMiddleware, controller.update);
-    routes.delete('/contacts/:id', autenticacaoMiddleware, controller.delete);
+    routes.get('/companies/:companyId/contacts', autenticacaoMiddleware, controller.findAll);
+    routes.get('/companies/:companyId/contacts/:id', autenticacaoMiddleware, controller.findOne);
+    routes.post('/companies/:companyId/contacts', autenticacaoMiddleware, controller.create);
+    routes.put('/companies/:companyId/contacts/:id', autenticacaoMiddleware, controller.update);
+    routes.delete('/companies/:companyId/contacts/:id', autenticacaoMiddleware, controller.delete);
 }

@@ -25,6 +25,11 @@ AddressRouter(routes, AddressesController, autenticacaoMiddleware);
 
 // IMPORTA ROTAS
 
+// Rotas de Menu
+const MenuRouter = require('./routes/MenuRouter');
+const MenuController = require('./controllers/MenuController');
+MenuRouter(routes, MenuController, autenticacaoMiddleware);
+
 // Rotas de Contact
 const ContactRouter = require('./routes/ContactRouter');
 const ContactController = require('./controllers/ContactController');

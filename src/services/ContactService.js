@@ -5,14 +5,21 @@ module.exports = {
     validaDados: (dados) => {
         let retorno = { status: true, msg: '' };
 
-        // const { nome } = dados;
+        const { contact, type } = dados;
 
-        // if (!nome) {
-            // return retorno = {
-                // status: false,
-                // msg: 'Nome é um campo obrigatórios'
-            // }
-        // }
+        if (!contact) {
+            return retorno = {
+                status: false,
+                message: 'Contato é um campo obrigatórios'
+            }
+        }
+
+        if (['EMA', 'PHO', 'CEL', 'WAP'].indexOf(type) === -1) {
+            return retorno = {
+                status: false,
+                message: 'Informe um tipo de contato válido.'
+            }
+        }
 
 
         return retorno;
