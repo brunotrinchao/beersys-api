@@ -30,5 +30,5 @@ module.exports = {
         const totalPages = Math.ceil(totalItems / limit);
 
         return { totalItems, data, totalPages };
-    }
+    },
  };

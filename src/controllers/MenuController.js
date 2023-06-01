@@ -1,10 +1,11 @@
-const Menu = require('../models/Menu');
-
-// const MenuService = require('../services/MenuService');
 const bcrypt = require('bcrypt');
 const db = require('../config/dbSequelize');
+// const MenuService = require('../services/MenuService');
 
 const Helper = require('../helpers/helperFunctions');
+const Menu = require('../models/Menu');
+const Category = require('../models/Category');
+const Product = require('../models/Product');
 
 module.exports = {
 
@@ -25,8 +26,16 @@ module.exports = {
                 attributes: ['id', 'createdAt', 'updatedAt'],
                 order: [['id', 'ASC']],
                 include: [
-                    // {,
-                    // }
+                    {
+                        attributes: ['id', 'name', 'status', 'createdAt', 'updatedAt'],
+                        model: Category,
+                        include: [
+                            {
+                                attributes: ['id', 'name', 'createdAt', 'updatedAt'],
+                                model: Product,
+                            }
+                        ]
+                    }
                 ]
             }
 
@@ -99,7 +108,8 @@ module.exports = {
             // }
 
             let payload = {
-                 companies_id: req.params.companyId,
+                companies_id: req.params.companyId,
+                status: 'ATI'
             }
 
             const menu = await Menu.create(payload);

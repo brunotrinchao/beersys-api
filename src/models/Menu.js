@@ -1,5 +1,6 @@
 const { Sequelize, DataTypes } = require('sequelize');
 const db = require('../config/dbSequelize');
+const Category = require('./Category');
 
 const Menu = db.define("menu", {
     id: {
@@ -34,6 +35,9 @@ const Menu = db.define("menu", {
     }
 });
 
-// Menu.sync();
+// Menu.sync({ force: true});
+
+Menu.hasMany(Category, { foreignKey: 'menus_id' });
+
 
 module.exports = Menu;

@@ -1,6 +1,9 @@
 const { Sequelize, DataTypes } = require('sequelize');
 const db = require('../config/dbSequelize');
 
+const Product = require('./Product');
+
+
 const Category = db.define("category", {
     id: {
       type: Sequelize.INTEGER.UNSIGNED,
@@ -36,6 +39,7 @@ const Category = db.define("category", {
     }
 });
 
-// Category.sync({ force: true });
+
+Category.hasMany(Product, { foreignKey: 'categories_id' });
 
 module.exports = Category;

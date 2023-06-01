@@ -2,6 +2,7 @@ const { Sequelize, DataTypes } = require('sequelize');
 const db = require('../config/dbSequelize');
 const User = require('./User');
 const Address = require('./Address');
+const Menu = require('./Menu');
 
 const Company = db.define("company", {
     id: {
@@ -49,6 +50,6 @@ const Company = db.define("company", {
 // Company.sync();
 
 Company.hasOne(Address, { foreignKey: 'companies_id' });
-
+Company.hasOne(Menu, { foreignKey: 'companies_id' });
 
 module.exports = Company;

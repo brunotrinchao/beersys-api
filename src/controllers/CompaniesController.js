@@ -1,11 +1,20 @@
-const Company = require('../models/Company');
-const User = require('../models/User');
-const Address = require('../models/Address');
 const CompanyService = require('../services/CompanyService');
 const bcrypt = require('bcrypt');
 const db = require('../config/dbSequelize');
 
 const Helper = require('../helpers/helperFunctions');
+
+const multer = require('multer');
+const upload = require('../helpers/storage');
+const _upload = upload.single('image')
+
+const Company = require('../models/Company');
+const User = require('../models/User');
+const Address = require('../models/Address');
+const Menu = require('../models/Menu');
+const Category = require('../models/Category');
+const Product = require('../models/Product');
+
 
 module.exports = {
 
@@ -31,14 +40,28 @@ module.exports = {
                 attributes: ['id', 'name', 'description', 'photo', 'createdAt', 'updatedAt'],
                 order: [['name', 'ASC']],
                 include: [
-                    // {
-                    //     attributes: ['id', 'name', 'email', 'phone', 'mobile', 'createdAt', 'updatedAt'],
-                    //     model: User,
-                    // },
-                    // {
-                    //     attributes: ['id', 'zipcode', 'address', 'number', 'country', 'createdAt', 'updatedAt'],
-                    //     model: Address,
-                    // }
+                    {
+                        attributes: ['id', 'status', 'createdAt', 'updatedAt'],
+                        order: [['name', 'ASC']],
+                        model: Menu,
+                        include: [
+                            {
+                                attributes: ['id', 'name', 'status', 'createdAt', 'updatedAt'],
+                                order: [['name', 'ASC']],
+                                model: Category,
+                                include: [
+                                    {
+                                        attributes: ['id', 'name', 'description', 'photo', 'price', 'createdAt', 'updatedAt'],
+                                        model: Product,
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        attributes: ['id', 'zipcode', 'address', 'number', 'country', 'createdAt', 'updatedAt'],
+                        model: Address,
+                    }
                 ]
             }
 
@@ -77,13 +100,33 @@ module.exports = {
                     users_id: autentication.id
                 },
                 attributes: ['id', 'name', 'description', 'photo', 'createdAt', 'updatedAt'],
+                order: [['name', 'ASC']],
                 include: [
-                    // {
-                    //     attributes: ['id', 'name', 'email', 'phone', 'mobile', 'createdAt', 'updatedAt'],
-                    //     model: User,
-                    // }
+                    {
+                        attributes: ['id', 'status', 'createdAt', 'updatedAt'],
+                        order: [['name', 'ASC']],
+                        model: Menu,
+                        include: [
+                            {
+                                attributes: ['id', 'name', 'status', 'createdAt', 'updatedAt'],
+                                order: [['name', 'ASC']],
+                                model: Category,
+                                include: [
+                                    {
+                                        attributes: ['id', 'name', 'description', 'photo', 'price', 'createdAt', 'updatedAt'],
+                                        model: Product,
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        attributes: ['id', 'zipcode', 'address', 'number', 'country', 'createdAt', 'updatedAt'],
+                        model: Address,
+                    }
                 ]
             }
+
             const company = await Company.findOne(options);
 
             if (!company) {
@@ -123,7 +166,6 @@ module.exports = {
             let payload = {
                 name: req.body.name,
                 description: req.body.description ?? null,
-                photo: req.body.photo ?? null,
                 status: req.body.status ?? 'ATI',
                 users_id: autentication.id,
             }
@@ -172,20 +214,44 @@ module.exports = {
                 phone: req.body.phone,
                 mobile: req.body.mobile,
             }
-                
-            await User.update(payload, options);
-
-            const optionsFind = {
-                where: {
-                    id: req.params.id
-                },
-                attributes: ['id', 'name', 'email', 'phone', 'mobile', 'createdAt', 'updatedAt']
+            
+            await Company.update(payload, options);
+            
+            const attributes = {
+                ...options,
+                attributes: ['id', 'name', 'description', 'photo', 'createdAt', 'updatedAt'],
+                order: [['name', 'ASC']],
+                include: [
+                    {
+                        attributes: ['id', 'status', 'createdAt', 'updatedAt'],
+                        order: [['name', 'ASC']],
+                        model: Menu,
+                        include: [
+                            {
+                                attributes: ['id', 'name', 'status', 'createdAt', 'updatedAt'],
+                                order: [['name', 'ASC']],
+                                model: Category,
+                                include: [
+                                    {
+                                        attributes: ['id', 'name', 'description', 'photo', 'price', 'createdAt', 'updatedAt'],
+                                        model: Product,
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        attributes: ['id', 'zipcode', 'address', 'number', 'country', 'createdAt', 'updatedAt'],
+                        model: Address,
+                    }
+                ]
             }
 
-            const user = await User.findOne(optionsFind);
 
-            if (!user) {
-                throw new Error(`Usuário não encontrado!`);
+            const company = await Company.findOne(attributes);
+
+            if (!company) {
+                throw new Error(`Estabelecimento não encontrado!`);
             }
                 
             const retorno = {
@@ -260,6 +326,88 @@ module.exports = {
             res.status(400).json(retorno);
         }
 
+    },
+
+    uploadImage: async (req, res) => {
+
+        try {
+            _upload(req, res, async (err) => {
+                if (err instanceof multer.MulterError) {
+                    res.status(404).send(err + 'Upload failed due to multer error');
+                } else if (err) {
+                    res.status(404).send(err + 'Upload failed due to unknown error');
+                }
+
+                const payload = {
+                    photo: req.file.path
+                }
+
+                console.log(req.file.path)
+
+                const options = {
+                    where: {
+                        id: req.params.id
+                    }
+                }
+
+                Company.update(payload, options);
+
+                const optionsFind = {
+                    where: {
+                        id: req.params.id
+                    },
+                    attributes: ['id', 'name', 'description', 'photo', 'createdAt', 'updatedAt'],
+                    order: [['name', 'ASC']],
+                    include: [
+                        {
+                            attributes: ['id', 'status', 'createdAt', 'updatedAt'],
+                            order: [['name', 'ASC']],
+                            model: Menu,
+                            include: [
+                                {
+                                    attributes: ['id', 'name', 'status', 'createdAt', 'updatedAt'],
+                                    order: [['name', 'ASC']],
+                                    model: Category,
+                                    include: [
+                                        {
+                                            attributes: ['id', 'name', 'description', 'photo', 'price', 'createdAt', 'updatedAt'],
+                                            model: Product,
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            attributes: ['id', 'zipcode', 'address', 'number', 'country', 'createdAt', 'updatedAt'],
+                            model: Address,
+                        }
+                    ]
+                }
+
+                const company = await Company.findOne(optionsFind);
+
+                if (!company) {
+                    throw new Error(`Estabelecimento não encontrado!`);
+                }
+
+                const retorno = {
+                    data: company,
+                    status: true,
+                    menssage: ``
+                }
+
+                res.status(200).json(retorno);
+                
+            })
+        } catch (error) {
+            const retorno = {
+                data: [],
+                status: false,
+                menssage: error.message
+            }
+
+            res.status(400).json(retorno);
+        }
     },
 
     delete: async (req, res) => {
