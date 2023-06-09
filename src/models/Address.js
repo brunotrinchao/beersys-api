@@ -27,16 +27,8 @@ const Address = db.define("address", {
     city: {
       type: Sequelize.STRING
     },
-    createdAt: {
-      allowNull: false,
-      type: Sequelize.DATE,
-      defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
-    },
-    updatedAt: {
-      allowNull: false,
-      type: Sequelize.DATE,
-      defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
-    },
+    createdAt: Sequelize.DATE,
+    updatedAt: Sequelize.DATE,
     companies_id: {
       type: DataTypes.INTEGER.UNSIGNED,
       allowNull: false,

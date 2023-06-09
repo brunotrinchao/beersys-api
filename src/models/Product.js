@@ -22,15 +22,8 @@ const Product = db.define("products", {
     type: Sequelize.DECIMAL(10, 2),
     allowNull: false,
   },
-    createdAt: {
-      allowNull: false,
-      type: Sequelize.DATE,
-    },
-    updatedAt: {
-      allowNull: false,
-      type: Sequelize.DATE
-  },
-    
+    createdAt: Sequelize.DATE,
+    updatedAt: Sequelize.DATE,
     categories_id: {
       type: DataTypes.INTEGER.UNSIGNED,
       allowNull: false,

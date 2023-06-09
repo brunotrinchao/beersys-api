@@ -8,25 +8,44 @@ cloudinary.config({
     api_secret:process.env.CLOUDINARY_API_SECRET
 });
 
-const storage =new CloudinaryStorage({
+const companies = new CloudinaryStorage({
     cloudinary: cloudinary,
     params : {
-        folder : process.env.NODE_ENV,
-        allowedFormats : ['jpeg','png','jpg']
+        folder : `${process.env.NODE_ENV}/companies`,
+        allowedFormats: ['jpeg', 'png', 'jpg'],
+        transformation: [
+            { width: 500, height: 500, crop: "fill" },
+
+        ]
+    }
+})
+const products = new CloudinaryStorage({
+    cloudinary: cloudinary,
+    params : {
+        folder : `${process.env.NODE_ENV}/products`,
+        allowedFormats: ['jpeg', 'png', 'jpg'],
+        transformation: [
+            { width: 500, height: 500, crop: "fill" },
+
+        ]
+    }
+})
+const categories = new CloudinaryStorage({
+    cloudinary: cloudinary,
+    params : {
+        folder : `${process.env.NODE_ENV}/categories`,
+        allowedFormats: ['jpeg', 'png', 'jpg'],
+        transformation: [
+            { width: 500, height: 500, crop: "fill" },
+
+        ]
     }
 })
 
-const limits = {
-  fileSize: 500 * 1024,
-  files: 1,
-};
 
 
-const upload = multer(
-    {
-        storage: storage,
-        limits: limits
-    }
-);
-
-module.exports = upload
+module.exports = {
+    companies,
+    products,
+    categories
+}

@@ -3,7 +3,7 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up (queryInterface, Sequelize) {
-    await queryInterface.bulkInsert('Permissions', [
+    await queryInterface.bulkInsert('permissions', [
       {
         key: 'ADM',
         name: 'Administrador',
@@ -16,7 +16,7 @@ module.exports = {
   },
 
   async down (queryInterface, Sequelize) {
-    await queryInterface.bulkDelete('Permissions', null, {});
+    await queryInterface.bulkDelete('permissions', null, {});
     
   }
 };

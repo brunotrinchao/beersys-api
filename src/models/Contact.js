@@ -17,16 +17,8 @@ const Contact = db.define("contact", {
       comment: 'EMA:E-mail|TEL:Telefone|CEL:Celular|WAP:WhatsApp',
       allowNull: false,
     },
-    createdAt: {
-      allowNull: false,
-      type: Sequelize.DATE,
-      defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
-    },
-    updatedAt: {
-      allowNull: false,
-      type: Sequelize.DATE,
-      defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
-    },
+    createdAt: Sequelize.DATE,
+    updatedAt: Sequelize.DATE,
     companies_id: {
       type: DataTypes.INTEGER.UNSIGNED,
       allowNull: false,

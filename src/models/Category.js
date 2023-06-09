@@ -4,7 +4,7 @@ const db = require('../config/dbSequelize');
 const Product = require('./Product');
 
 
-const Category = db.define("category", {
+const Category = db.define("categories", {
     id: {
       type: Sequelize.INTEGER.UNSIGNED,
       primaryKey: true,
@@ -15,20 +15,17 @@ const Category = db.define("category", {
       type: Sequelize.STRING,
       allowNull: false,
     },
+    image: {
+      type: Sequelize.STRING,
+    },
     status: {
       type: Sequelize.CHAR(3),
       valueDefault: 'ATI',
       allowNull: false,
       comment: 'ATI = Ativo, INA = Inativo',
     },
-    createdAt: {
-      allowNull: false,
-      type: Sequelize.DATE,
-    },
-    updatedAt: {
-      allowNull: false,
-      type: Sequelize.DATE
-    },
+    createdAt: Sequelize.DATE,
+    updatedAt: Sequelize.DATE,
     menus_id: {
       type: DataTypes.INTEGER.UNSIGNED,
       allowNull: false,
@@ -39,6 +36,7 @@ const Category = db.define("category", {
     }
 });
 
+// Category.sync({force: true});
 
 Category.hasMany(Product, { foreignKey: 'categories_id' });
 

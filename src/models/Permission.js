@@ -16,15 +16,12 @@ const Permission = db.define("permissions", {
     name: {
       type: Sequelize.STRING,
     },
-    createdAt: {
-      allowNull: false,
-      type: Sequelize.DATE,
-      defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
-    },
+    createdAt: Sequelize.DATE,
+    updatedAt: Sequelize.DATE,
     updatedAt: {
       allowNull: false,
-      type: Sequelize.DATE,
-      defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+      type: "TIMESTAMP",
+      defaultValue: Sequelize.literal('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'),
     },
 });
 
@@ -34,7 +31,7 @@ Permission.associate = (models) => {
   });
 }
 
-// Permission.sync();
+Permission.sync();
 // Permission.hasMany(User, { foreignKey: 'permission_id' });
 
 module.exports = Permission;

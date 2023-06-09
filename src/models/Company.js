@@ -26,16 +26,8 @@ const Company = db.define("company", {
       valueDefault: 'ATI',
       allowNull: false,
     },
-    createdAt: {
-      allowNull: false,
-      type: Sequelize.DATE,
-      defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
-    },
-    updatedAt: {
-      allowNull: false,
-      type: Sequelize.DATE,
-      defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
-    },
+    createdAt: Sequelize.DATE,
+    updatedAt: Sequelize.DATE,
     users_id: {
       type: DataTypes.INTEGER.UNSIGNED,
       allowNull: false,

@@ -1,18 +1,17 @@
-const Category = require('../models/Category');
-
 const CategoryService = require('../services/CategoryService');
-const bcrypt = require('bcrypt');
 const db = require('../config/dbSequelize');
 
 const Helper = require('../helpers/helperFunctions');
 
-module.exports = {
+const Category = require('../models/Category');
+
+const CategoryController = {
 
     findAll: async (req, res) => {
         try {
             const filter = {
                 where: {
-                    categories_id: req.params.companyId
+                    menus_id: req.params.menuId
                 }
             }
 
@@ -23,7 +22,7 @@ module.exports = {
 
             const attributes = {
                 ...filter,
-                attributes: ['id', 'name', 'status', 'createdAt', 'updatedAt'],
+                attributes: ['id', 'name', 'image', 'status', 'createdAt', 'updatedAt'],
                 order: [['name', 'ASC']],
                 include: [
                     // {,
@@ -60,7 +59,7 @@ module.exports = {
                 where: {
                     id: req.params.id
                 },
-                attributes: ['id', 'name', 'status', 'createdAt', 'updatedAt'],
+                attributes: ['id', 'name', 'image', 'status', 'createdAt', 'updatedAt'],
                 include: [
                     // {
                     // }
@@ -222,6 +221,41 @@ module.exports = {
 
     },
 
+    uploadImage: async (req, res) => {
+
+        try {
+            if (!req.file) {
+                throw new Error('Informe a imagem!');
+            } else {
+
+                const payload = {
+                    image: req.file.path
+                }
+
+                const options = {
+                    where: {
+                        id: req.params.id
+                    }
+                }
+
+                await Category.update(payload, options);
+
+                // Usa findOne para retornar o objeto completo
+                await CategoryController.findOne(req, res);
+
+                
+            }
+        } catch (error) {
+            const retorno = {
+                data: [],
+                status: false,
+                menssage: error.message
+            }
+
+            res.status(400).json(retorno);
+        }
+    },
+
     delete: async (req, res) => {
         try{
 
@@ -255,3 +289,5 @@ module.exports = {
     }
 
 }
+
+module.exports = CategoryController;

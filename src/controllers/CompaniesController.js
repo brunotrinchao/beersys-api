@@ -1,12 +1,7 @@
 const CompanyService = require('../services/CompanyService');
 const bcrypt = require('bcrypt');
-const db = require('../config/dbSequelize');
 
 const Helper = require('../helpers/helperFunctions');
-
-const multer = require('multer');
-const upload = require('../helpers/storage');
-const _upload = upload.single('image')
 
 const Company = require('../models/Company');
 const User = require('../models/User');
@@ -15,8 +10,12 @@ const Menu = require('../models/Menu');
 const Category = require('../models/Category');
 const Product = require('../models/Product');
 
+//  UPLOAD
+// const multer = require('multer');
+// const upload = require('../helpers/storage');
+// const uploadImage = upload.single('image')
 
-module.exports = {
+const CompanyController = {
 
     findAll: async (req, res) => {
         try {
@@ -331,18 +330,13 @@ module.exports = {
     uploadImage: async (req, res) => {
 
         try {
-            _upload(req, res, async (err) => {
-                if (err instanceof multer.MulterError) {
-                    res.status(404).send(err + 'Upload failed due to multer error');
-                } else if (err) {
-                    res.status(404).send(err + 'Upload failed due to unknown error');
-                }
+            if (!req.file) {
+                throw new Error('Informe a imagem!');
+            } else {
 
                 const payload = {
                     photo: req.file.path
                 }
-
-                console.log(req.file.path)
 
                 const options = {
                     where: {
@@ -350,55 +344,13 @@ module.exports = {
                     }
                 }
 
-                Company.update(payload, options);
+                await Company.update(payload, options);
 
-                const optionsFind = {
-                    where: {
-                        id: req.params.id
-                    },
-                    attributes: ['id', 'name', 'description', 'photo', 'createdAt', 'updatedAt'],
-                    order: [['name', 'ASC']],
-                    include: [
-                        {
-                            attributes: ['id', 'status', 'createdAt', 'updatedAt'],
-                            order: [['name', 'ASC']],
-                            model: Menu,
-                            include: [
-                                {
-                                    attributes: ['id', 'name', 'status', 'createdAt', 'updatedAt'],
-                                    order: [['name', 'ASC']],
-                                    model: Category,
-                                    include: [
-                                        {
-                                            attributes: ['id', 'name', 'description', 'photo', 'price', 'createdAt', 'updatedAt'],
-                                            model: Product,
-                                        }
-                                    ]
-                                }
-                            ]
-                        },
-                        {
-                            attributes: ['id', 'zipcode', 'address', 'number', 'country', 'createdAt', 'updatedAt'],
-                            model: Address,
-                        }
-                    ]
-                }
+                // Usa findOne para retornar o objeto completo
+                await CompanyController.findOne(req, res);
 
-                const company = await Company.findOne(optionsFind);
-
-                if (!company) {
-                    throw new Error(`Estabelecimento não encontrado!`);
-                }
-
-                const retorno = {
-                    data: company,
-                    status: true,
-                    menssage: ``
-                }
-
-                res.status(200).json(retorno);
                 
-            })
+            }
         } catch (error) {
             const retorno = {
                 data: [],
@@ -443,3 +395,5 @@ module.exports = {
     }
 
 }
+
+module.exports = CompanyController;
