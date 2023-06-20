@@ -1,8 +1,10 @@
-const { Sequelize, DataTypes } = require('sequelize');
-const db = require('../config/dbSequelize');
-const Company = require('./Company');
+const { Sequelize, DataTypes } = require("sequelize");
+const db = require("../config/dbSequelize");
+const Company = require("./Company");
 
-const Address = db.define("address", {
+const Address = db.define(
+  "address",
+  {
     id: {
       type: Sequelize.INTEGER.UNSIGNED,
       primaryKey: true,
@@ -16,16 +18,19 @@ const Address = db.define("address", {
       type: Sequelize.STRING,
     },
     number: {
-      type: Sequelize.INTEGER
+      type: Sequelize.INTEGER,
     },
     neighborhood: {
-      type: Sequelize.STRING
+      type: Sequelize.STRING,
     },
     country: {
-      type: Sequelize.STRING
+      type: Sequelize.STRING,
     },
     city: {
-      type: Sequelize.STRING
+      type: Sequelize.STRING,
+    },
+    reference: {
+      type: Sequelize.STRING,
     },
     createdAt: Sequelize.DATE,
     updatedAt: Sequelize.DATE,
@@ -33,13 +38,15 @@ const Address = db.define("address", {
       type: DataTypes.INTEGER.UNSIGNED,
       allowNull: false,
       references: {
-        model: 'companies',
-        key: 'id'
-      }
-    }
-},{
-    tableName: 'address'
-});
+        model: "companies",
+        key: "id",
+      },
+    },
+  },
+  {
+    tableName: "address",
+  }
+);
 
 // Address.sync();
 

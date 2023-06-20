@@ -1,3 +1,5 @@
+const { Sequelize } = require("sequelize");
+
 const CompanyService = require("../services/CompanyService");
 const bcrypt = require("bcrypt");
 
@@ -9,6 +11,7 @@ const Address = require("../models/Address");
 const Menu = require("../models/Menu");
 const Category = require("../models/Category");
 const Product = require("../models/Product");
+const Contacts = require("../models/Contact");
 
 //  UPLOAD
 // const multer = require('multer');
@@ -136,6 +139,20 @@ const CompanyController = {
         order: [["name", "ASC"]],
         include: [
           {
+            attributes: [
+              "id",
+              "zipcode",
+              "address",
+              "number",
+              "neighborhood",
+              "city",
+              "country",
+              "createdAt",
+              "updatedAt",
+            ],
+            model: Address,
+          },
+          {
             attributes: ["id", "status", "createdAt", "updatedAt"],
             order: [["name", "ASC"]],
             model: Menu,
@@ -164,14 +181,18 @@ const CompanyController = {
           {
             attributes: [
               "id",
-              "zipcode",
-              "address",
-              "number",
-              "country",
+              "contact",
+              "type",
+              [
+                Sequelize.literal(
+                  'CASE WHEN type = "EMA" THEN "E-mail" WHEN type = "TEL" THEN "Telefone" WHEN type = "CEL" THEN "Celular" WHEN type = "WHA" THEN "Whatsapp" END'
+                ),
+                "type_formated",
+              ],
               "createdAt",
               "updatedAt",
             ],
-            model: Address,
+            model: Contacts,
           },
         ],
       };
@@ -290,9 +311,6 @@ const CompanyController = {
       res.status(200).json(retorno);
     } catch (error) {
       let message = error.message;
-      if (error.errors[0].type) {
-        message = `O e-mail ${req.body.email} já está cadastrado!`;
-      }
       const retorno = {
         data: [],
         status: false,
@@ -379,7 +397,10 @@ const CompanyController = {
         await Company.update(payload, options);
 
         const retorno = {
-          data: [],
+          data: {
+            id: req.params.id,
+            image: payload.photo,
+          },
           status: true,
           message: `Imagem atualizada com sucesso!`,
         };

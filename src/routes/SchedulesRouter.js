@@ -1,0 +1,27 @@
+module.exports = (routes, controller, autenticacaoMiddleware) => {
+  routes.get(
+    "/companies/:companyId/schedules",
+    autenticacaoMiddleware,
+    controller.findAll
+  );
+  routes.get(
+    "/companies/:companyId/schedules/:id",
+    autenticacaoMiddleware,
+    controller.findOne
+  );
+  routes.post(
+    "/companies/:companyId/schedules",
+    autenticacaoMiddleware,
+    controller.create
+  );
+  routes.put(
+    "/companies/:companyId/schedules/:id",
+    autenticacaoMiddleware,
+    controller.update
+  );
+  routes.delete(
+    "/companies/:companyId/schedules/:id",
+    autenticacaoMiddleware,
+    controller.delete
+  );
+};

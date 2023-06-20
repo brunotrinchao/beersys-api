@@ -25,6 +25,11 @@ AddressRouter(routes, AddressesController, autenticacaoMiddleware);
 
 // IMPORTA ROTAS
 
+// Rotas de Schedules
+const SchedulesRouter = require('./routes/SchedulesRouter');
+const SchedulesController = require('./controllers/SchedulesController');
+SchedulesRouter(routes, SchedulesController, autenticacaoMiddleware);
+
 // Rotas de Product
 const ProductRouter = require('./routes/ProductRouter');
 const ProductController = require('./controllers/ProductController');
