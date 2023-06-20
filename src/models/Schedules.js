@@ -27,6 +27,6 @@ const Schedules = db.define("schedules", {
   },
 });
 
-Schedules.sync({ force: true });
+// Schedules.sync({ force: true });
 
 module.exports = Schedules;
