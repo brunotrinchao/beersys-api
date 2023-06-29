@@ -85,7 +85,10 @@ module.exports = {
 
       jwt.verify(token, process.env.JWT_TOKEN, function (err, decoded) {
         if (err) {
-          throw new Error("Token inválido");
+          retorno.code = 200;
+          retorno.status = false;
+          retorno.message = "Token inválido";
+          return res.status(200).send(retorno);
         }
         retorno.code = 200;
         retorno.status = true;
@@ -93,7 +96,12 @@ module.exports = {
         return res.status(200).json(retorno);
       });
     } catch (error) {
-      next(error);
+      const retorno = {
+        data: [],
+        status: false,
+        message: error.message,
+      };
+      res.status(400).json(retorno);
     }
   },
 };

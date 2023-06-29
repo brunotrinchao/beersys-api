@@ -12,6 +12,7 @@ const Menu = require("../models/Menu");
 const Category = require("../models/Category");
 const Product = require("../models/Product");
 const Contacts = require("../models/Contact");
+const Schedules = require("../models/Schedules");
 
 //  UPLOAD
 // const multer = require('multer');
@@ -185,7 +186,12 @@ const CompanyController = {
               "type",
               [
                 Sequelize.literal(
-                  'CASE WHEN type = "EMA" THEN "E-mail" WHEN type = "TEL" THEN "Telefone" WHEN type = "CEL" THEN "Celular" WHEN type = "WHA" THEN "Whatsapp" END'
+                  `CASE 
+                  WHEN type = "EMA" THEN "E-mail" 
+                  WHEN type = "TEL" THEN "Telefone" 
+                  WHEN type = "CEL" THEN "Celular" 
+                  WHEN type = "WHA" THEN "Whatsapp" 
+                  END`
                 ),
                 "type_formated",
               ],
@@ -193,6 +199,31 @@ const CompanyController = {
               "updatedAt",
             ],
             model: Contacts,
+          },
+          {
+            attributes: [
+              "id",
+              "day",
+              "start",
+              "end",
+              [
+                Sequelize.literal(
+                  `CASE 
+                      WHEN day = "DOM" THEN "Domingo" 
+                      WHEN day = "SEG" THEN "Segunda"
+                      WHEN day = "TER" THEN "Terça"
+                      WHEN day = "QUA" THEN "Quarta"
+                      WHEN day = "QUI" THEN "Quinta"
+                      WHEN day = "SEX" THEN "Sexta"
+                      WHEN day = "SAB" THEN "Sábado"
+                    END`
+                ),
+                "day_formated",
+              ],
+              "createdAt",
+              "updatedAt",
+            ],
+            model: Schedules,
           },
         ],
       };

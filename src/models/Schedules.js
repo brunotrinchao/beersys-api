@@ -25,6 +25,14 @@ const Schedules = db.define("schedules", {
     allowNull: false,
     type: Sequelize.DATE,
   },
+  companies_id: {
+    type: DataTypes.INTEGER.UNSIGNED,
+    allowNull: false,
+    references: {
+      model: "companies",
+      key: "id",
+    },
+  },
 });
 
 // Schedules.sync({ force: true });

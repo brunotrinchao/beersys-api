@@ -4,6 +4,7 @@ const User = require("./User");
 const Address = require("./Address");
 const Menu = require("./Menu");
 const Contact = require("./Contact");
+const Schedules = require("./Schedules");
 
 const Company = db.define("company", {
   id: {
@@ -45,5 +46,7 @@ const Company = db.define("company", {
 Company.hasOne(Address, { foreignKey: "companies_id" });
 Company.hasOne(Menu, { foreignKey: "companies_id" });
 Company.hasMany(Contact, { foreignKey: "companies_id" });
+Company.hasMany(Contact, { foreignKey: "companies_id" });
+Company.hasMany(Schedules, { foreignKey: "companies_id" });
 
 module.exports = Company;

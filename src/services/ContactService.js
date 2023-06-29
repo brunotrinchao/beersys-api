@@ -1,28 +1,25 @@
 // const helper = require('../helpers/helperFunctions');
 
 module.exports = {
-    
-    validaDados: (dados) => {
-        let retorno = { status: true, msg: '' };
+  validaDados: (dados) => {
+    let retorno = { status: true, msg: "" };
 
-        const { contact, type } = dados;
+    const { contact, type } = dados;
 
-        if (!contact) {
-            return retorno = {
-                status: false,
-                message: 'Contato é um campo obrigatórios'
-            }
-        }
-
-        if (['EMA', 'TEL', 'CEL', 'WAP'].indexOf(type) === -1) {
-            return retorno = {
-                status: false,
-                message: 'Informe um tipo de contato válido.'
-            }
-        }
-
-
-        return retorno;
+    if (!contact) {
+      return (retorno = {
+        status: false,
+        message: "Contato é um campo obrigatórios",
+      });
     }
 
-}
+    if (["EMA", "TEL", "CEL", "WHA"].indexOf(type) === -1) {
+      return (retorno = {
+        status: false,
+        message: "Informe um tipo de contato válido.",
+      });
+    }
+
+    return retorno;
+  },
+};

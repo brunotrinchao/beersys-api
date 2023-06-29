@@ -1,6 +1,6 @@
 const Schedules = require("../models/Schedules");
 
-// const SchedulesService = require('../services/SchedulesService');
+const SchedulesService = require("../services/SchedulesService");
 const bcrypt = require("bcrypt");
 const db = require("../config/dbSequelize");
 
@@ -19,7 +19,28 @@ module.exports = {
 
       const attributes = {
         ...filter,
-        attributes: ["id", "day", "start", "end", "createdAt", "updatedAt"],
+        attributes: [
+          "id",
+          "day",
+          "start",
+          "end",
+          [
+            Sequelize.literal(
+              `CASE 
+                      WHEN day = "DOM" THEN "Domingo" 
+                      WHEN day = "SEG" THEN "Segunda"
+                      WHEN day = "TER" THEN "Terça"
+                      WHEN day = "QUA" THEN "Quarta"
+                      WHEN day = "QUI" THEN "Quinta"
+                      WHEN day = "SEX" THEN "Sexta"
+                      WHEN day = "SAB" THEN "Sábado"
+                    END`
+            ),
+            "day_formated",
+          ],
+          "createdAt",
+          "updatedAt",
+        ],
         order: [["id", "ASC"]],
         include: [
           // {,
@@ -59,7 +80,28 @@ module.exports = {
         where: {
           id: req.params.id,
         },
-        attributes: ["id", "day", "start", "end", "createdAt", "updatedAt"],
+        attributes: [
+          "id",
+          "day",
+          "start",
+          "end",
+          [
+            Sequelize.literal(
+              `CASE 
+                      WHEN day = "DOM" THEN "Domingo" 
+                      WHEN day = "SEG" THEN "Segunda"
+                      WHEN day = "TER" THEN "Terça"
+                      WHEN day = "QUA" THEN "Quarta"
+                      WHEN day = "QUI" THEN "Quinta"
+                      WHEN day = "SEX" THEN "Sexta"
+                      WHEN day = "SAB" THEN "Sábado"
+                    END`
+            ),
+            "day_formated",
+          ],
+          "createdAt",
+          "updatedAt",
+        ],
         include: [
           // {
           // }
@@ -90,22 +132,22 @@ module.exports = {
 
   create: async (req, res) => {
     try {
-      // const ret = SchedulesService.validaDados(req.body);
-
-      // if (!ret.status) {
-      //     throw new Error(ret.message );
-      // }
-
+      const ret = await SchedulesService.validaDados(req.body);
+      if (!ret.status) {
+        throw new Error(ret.message);
+      }
       let payload = {
+        companies_id: req.params.companyId,
         day: req.body.day,
         start: req.body.start,
         end: req.body.end,
       };
-
       const schedules = await Schedules.create(payload);
 
+      let _schedules = schedules.dataValues;
+      _schedules.day_formated = Helper.diaSemana(_schedules.day);
       const retorno = {
-        data: schedules,
+        data: _schedules,
         status: true,
         menssage: `Cadastro realizado com sucesso!`,
       };
@@ -114,7 +156,7 @@ module.exports = {
       const retorno = {
         data: [],
         status: false,
-        menssage: error,
+        message: error.message,
       };
       res.status(400).json(retorno);
     }

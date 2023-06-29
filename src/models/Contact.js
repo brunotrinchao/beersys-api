@@ -10,11 +10,11 @@ const Contact = db.define("contact", {
     allowNull: false,
   },
   contact: {
-    type: Sequelize.STRING(20),
+    type: Sequelize.STRING(255),
   },
   type: {
     type: Sequelize.CHAR(3),
-    comment: "EMA:E-mail|TEL:Telefone|CEL:Celular|WAP:WhatsApp",
+    comment: "EMA:E-mail|TEL:Telefone|CEL:Celular|WHA:WhatsApp",
     allowNull: false,
   },
   createdAt: Sequelize.DATE,
@@ -29,6 +29,6 @@ const Contact = db.define("contact", {
   },
 });
 
-// Address.sync();
+// Address.sync({ force: true });
 
 module.exports = Contact;
